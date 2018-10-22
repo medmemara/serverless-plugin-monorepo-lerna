@@ -1,5 +1,7 @@
+// Modified from https://github.com/Butterwire/serverless-plugin-monorepo
 const fs = require('fs-extra')
 const path = require('path')
+const shell = require('shelljs')
 
 // Takes a path and returns all node_modules resolution paths (but not global include paths).
 const getNodeModulePaths = p => {
@@ -49,7 +51,18 @@ class ServerlessMonoRepo {
     const paths = getNodeModulePaths(fromPath)
 
     // Get package file path
-    const pkg = require.resolve(path.join(name, 'package.json'), { paths })
+    let pkg = null
+    try {
+      pkg = require.resolve(path.join(name, 'package.json'), { paths })
+    } catch (error) {
+      // try to get lerna managed deps, if no package found
+      const lernaPath = this.lernaPackages.filter(p => p.name === name).map(p => { return p.location })
+      if (lernaPath.length > 0) {
+        pkg = lernaPath[0] + '/package.json'
+      } else {
+        throw error
+      }
+    }
 
     // Get relative path to package & create link if not an embedded node_modules
     const target = path.relative(path.join(toPath, path.dirname(name)), path.dirname(pkg))
@@ -107,7 +120,10 @@ class ServerlessMonoRepo {
 
   async packageInitialise () {
     // Read package JSON
-    const { dependencies = {} } = require(path.join(this.settings.path, 'package.json'))
+    const { dependencies = {}, name } = require(path.join(this.settings.path, 'package.json'))
+
+    // get internal lerna dependencies
+    this.lernaPackages = JSON.parse(shell.exec(`lerna ls --scope=${name} --json --include-filtered-dependencies`).stdout)
 
     // Link all dependent packages
     this.log('Creating dependency symlinks')

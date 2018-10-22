@@ -1,0 +1,27 @@
+service: lambda-function-b
+
+plugins:
+  localPath: '../../.serverless_plugins'
+  modules:
+    - serverless-monorepo-lerna-plugin
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+
+package:
+  exclude:
+    - './**'
+    - '!node_modules/**'
+    - '!package.json'
+  include:
+    - 'lib/**'
+
+functions:
+  function-a:
+    handler: lib/index.handler
+
+    events:
+      - http:
+          path: hello-b
+          method: get

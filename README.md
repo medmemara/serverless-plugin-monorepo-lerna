@@ -1,60 +1,10 @@
-# serverless-plugin-monorepo
+# Serverless lerna monorepo example
+## Motivation
+Using [Serverless](https://serverless.com/framework/docs/) with Javascript mono repos usually requires no hoist options. [serverless-plugin-monorepo](https://github.com/Butterwire/serverless-plugin-monorepo) solves this problem when a mono repo uses [Yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/). It should be a preferred way to use Serverless with a mono repo, if there is no limitation which package manager (yarn or npm) to select.
 
-[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
-
-A Serverless plugin design to make it possible to use Serverless in a 
-Javascript mono repo with hoisted dependencies, e.g. when using [Yarn Workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
-
-This plugin alleviates the need to use [nohoist](https://yarnpkg.com/blog/2018/02/15/nohoist/) functionality by creating 
-symlinks to all declared dependencies. Development dependencies are deliberately NOT linked so these
-will not be packaged into the resulting archive. 
-
-[Butterwire](https://www.butterwire.com) uses Yarn workspaces and we created this plugin to improve our development
-experience. Not using nohoist saves wasting disk space and also accidentally including
-development dependencies in our packaged functions.
-
-*Note, this package will only work on operating systems that support symbolic links!*
-
-
-## Installation
-
-```
-yarn add --dev serverless-plugin-monorepo
-# or using NPM
-npm install --dev serverless-plugin-monorepo
-```
-
-Currently this plugin requires Node V8+. If there is interest in support older 
-versions then trans-compilation with Babel could be added.
-
+But there might be cases when yarn can't be used. The project addresses such needs by utilising modified [serverless-plugin-monorepo](https://github.com/Butterwire/serverless-plugin-monorepo) as a local plugin.
 
 ## Usage
+1. Clone the project and modify in/add to code to packages folder.
+2. Copy  ```.serverless_plugins/serverless-monorepo-lerna-plugin.js``` and update ```serverless.yml``` to have plugin and globs as shown in ```lambda-function-a``` or ```lambda-function-b```. Add depndendencies: ```npm i shelljs lerna --save-dev``` (assuming serverless added as a development dependency or global package).
 
-Add the plugin to your `serverless.yml` file:
-
-```
-plugins:
-  - serverless-plugin-monorepo
-```
-
-The plugin listens for package lifecycle events. Prior to Serverless packaging
-up the service, it will scan the `package.json` file for dependencies and
-ensure that all dependencies (including transitive dependencies) are symlinked in `node_modules`.
-
-Hence when Serverless creates the archive, it will follow the symlinks and all 
-dependencies will be added as expected. Development/peer dependencies are ignored.
-
-
-## Contributing
-
-We welcome issue reports and pull requests!
-
-There is a small `run` script which will launch Node V8 in a Docker container which
-you may find useful for development purposes.
-
-Note we are using [StandardJS](https://standardjs.com/) and you can run
-the lint tool via `yarn lint` which will attempt to automatically issues like spacing etc. 
-
-## Copyright
-
-Copyright [Butterwire Limited](https://www.butterwire.com) 2018

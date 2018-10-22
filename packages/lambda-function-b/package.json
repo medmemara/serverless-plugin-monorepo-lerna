@@ -1,0 +1,15 @@
+{
+  "name": "@example/lambda-function-b",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "sls-package": " ../../node_modules/serverless/bin/serverless package",
+    "sls-deploy": " ../../node_modules/serverless/bin/serverless deploy"
+
+  },
+  "dependencies": {
+    "@example/module-1": "^0.1.0"
+  }
+}

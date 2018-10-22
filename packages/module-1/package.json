@@ -1,0 +1,13 @@
+{
+  "name": "@example/module-1",
+  "version": "0.1.0",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest -c ../../jest.json --coverage",
+    "dockerbuild": "docker run --rm -v \"$PWD\":/var/task lambci/lambda:build-nodejs8.10 npm install",
+    "build": "tsc"
+  },
+  "dependencies": {
+  }
+}
