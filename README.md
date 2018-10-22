@@ -2,7 +2,7 @@
 ## Motivation
 Using [Serverless](https://serverless.com/framework/docs/) with Javascript mono repos usually requires no hoist options. [serverless-plugin-monorepo](https://github.com/Butterwire/serverless-plugin-monorepo) solves this problem when a mono repo uses [Yarn workspaces](https://yarnpkg.com/lang/en/docs/workspaces/). It should be a preferred way to use Serverless with a mono repo, if there is no limitation which package manager (yarn or npm) to select.
 
-But there might be cases when yarn can't be used. The project addresses such needs by utilising modified [serverless-plugin-monorepo](https://github.com/Butterwire/serverless-plugin-monorepo) as a local plugin.
+But there might be cases when yarn can't be used. The project addresses such needs by utilising a modified [serverless-plugin-monorepo](https://github.com/Butterwire/serverless-plugin-monorepo) as a local plugin and [lerna](https://github.com/lerna/lerna). 
 
 ## Usage
 1. Clone the project and modify in/add to code to packages folder.
